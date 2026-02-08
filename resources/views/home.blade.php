@@ -5,7 +5,7 @@
 <div class="max-w-6xl mx-auto px-4">
     
     <div class="text-center mb-10">
-        <h1 class="text-4xl font-extrabold text-white">BIENVENUE! DANS LA BIBLIOTHÈQUE-BOOKHOME</h1>
+        <h1 class="text-4xl font-extrabold text-white">BIENVENUE! A CLAC</h1>
         <p class="text-white mt-2">Gérez facilement vos livres, catégories, emprunts et utilisateurs</p>
     </div>
 

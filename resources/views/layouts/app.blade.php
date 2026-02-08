@@ -20,10 +20,10 @@
     </style>
 
 
-    <nav class="bg-blue-600 p-4 text-white fixed top-0 left-0 w-full z-50 shadow-md">
+    <nav class="bg-green-600 p-4 text-white fixed top-0 left-0 w-full z-50 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
         
-            <a href="{{ route('home') }}" class="font-bold text-lg">BIBLIOTHEQUE-BOOKHOME</a>
+            <a href="{{ route('home') }}" class="font-bold text-lg">MABIBLIOTHEQUE</a>
 
             
             <button id="menu-toggle" class="md:hidden focus:outline-none">
