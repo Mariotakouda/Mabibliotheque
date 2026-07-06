@@ -11,34 +11,38 @@
 
     @auth
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            
-            <a href="{{ route('books.index') }}" 
+
+            <a href="{{ route('books.index') }}"
                class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
                 <h2 class="text-lg font-semibold">LIVRES</h2>
-                <p class="text-gray-500 text-sm">Gérer la liste des livres</p>
+                <p class="text-gray-500 text-sm">Parcourir le catalogue</p>
             </a>
 
-            
-            <a href="{{ route('categories.index') }}" 
+            <a href="{{ route('categories.index') }}"
                class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
                 <h2 class="text-lg font-semibold">CATEGORIES</h2>
                 <p class="text-gray-500 text-sm">Classer vos livres</p>
             </a>
 
-            
-            <a href="{{ route('borrowings.index') }}" 
+            <a href="{{ route('borrowings.index') }}"
                class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
                 <h2 class="text-lg font-semibold">EMPRUNTS</h2>
-                <p class="text-gray-500 text-sm">Suivre emprunts & retours</p>
+                <p class="text-gray-500 text-sm">{{ auth()->user()->isStaff() ? 'Suivre emprunts & retours' : 'Voir mes emprunts' }}</p>
             </a>
 
-            
-            <a href="{{ route('users.index') }}" 
-               class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
-                <h2 class="text-lg font-semibold">UTILISATEURS</h2>
-                <p class="text-gray-500 text-sm">Gérer les utilisateurs</p>
-            </a>
+            @if(auth()->user()->isAdmin())
+                <a href="{{ route('users.index') }}"
+                   class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
+                    <h2 class="text-lg font-semibold">UTILISATEURS</h2>
+                    <p class="text-gray-500 text-sm">Gérer les utilisateurs</p>
+                </a>
+            @else
+                <a href="{{ route('dashboard') }}"
+                   class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
+                    <h2 class="text-lg font-semibold">TABLEAU DE BORD</h2>
+                    <p class="text-gray-500 text-sm">Voir mon activité</p>
+                </a>
+            @endif
         </div>
     @endauth
 

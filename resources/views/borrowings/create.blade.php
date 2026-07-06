@@ -24,11 +24,11 @@
 
         
         <div class="mb-4">
-            <label class="block font-semibold mb-1">Livre</label>
+            <label class="block font-semibold mb-1">Livre <span class="text-gray-400 text-sm">(disponibles uniquement)</span></label>
             <select name="book_id" class="w-full border rounded-lg p-2">
                 <option value="">Sélectionner un livre</option>
                 @foreach($books as $book)
-                    <option value="{{ $book->id }}">{{ $book->title }}</option>
+                    <option value="{{ $book->id }}">{{ $book->title }} ({{ $book->available_copies }} dispo.)</option>
                 @endforeach
             </select>
             @error('book_id')
