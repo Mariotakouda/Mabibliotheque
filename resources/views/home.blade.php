@@ -2,64 +2,74 @@
 @section('title', 'Accueil')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4">
-    
-    <div class="text-center mb-10">
-        <h1 class="text-4xl font-extrabold text-white">BIENVENUE! A CLAC</h1>
-        <p class="text-white mt-2">Gérez facilement vos livres, catégories, emprunts et utilisateurs</p>
-    </div>
 
-    @auth
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-            <a href="{{ route('books.index') }}"
-               class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
-                <h2 class="text-lg font-semibold">LIVRES</h2>
-                <p class="text-gray-500 text-sm">Parcourir le catalogue</p>
-            </a>
-
-            <a href="{{ route('categories.index') }}"
-               class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
-                <h2 class="text-lg font-semibold">CATEGORIES</h2>
-                <p class="text-gray-500 text-sm">Classer vos livres</p>
-            </a>
-
-            <a href="{{ route('borrowings.index') }}"
-               class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
-                <h2 class="text-lg font-semibold">EMPRUNTS</h2>
-                <p class="text-gray-500 text-sm">{{ auth()->user()->isStaff() ? 'Suivre emprunts & retours' : 'Voir mes emprunts' }}</p>
-            </a>
-
-            @if(auth()->user()->isAdmin())
-                <a href="{{ route('users.index') }}"
-                   class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
-                    <h2 class="text-lg font-semibold">UTILISATEURS</h2>
-                    <p class="text-gray-500 text-sm">Gérer les utilisateurs</p>
-                </a>
-            @else
-                <a href="{{ route('dashboard') }}"
-                   class="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 text-center">
-                    <h2 class="text-lg font-semibold">TABLEAU DE BORD</h2>
-                    <p class="text-gray-500 text-sm">Voir mon activité</p>
-                </a>
-            @endif
-        </div>
-    @endauth
-
-    @guest
-        <div class="text-center mt-12">
-            <p class="text-lg text-gray-600 mb-4">Bienvenue invité </p>
-            <div class="flex justify-center space-x-4">
-                <a href="{{ route('login') }}" 
-                   class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl shadow-md transition">
-                   Se connecter
-                </a>
-                <a href="{{ route('register') }}" 
-                   class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-xl shadow-md transition">
-                   S'inscrire
-                </a>
-            </div>
-        </div>
-    @endguest
+<div class="mb-10">
+    <p class="eyebrow mb-3">Centre Local d'Accès à la Culture</p>
+    <h1 class="page-title text-3xl sm:text-4xl">Bienvenue sur CLAC</h1>
+    <p class="page-subtitle text-base max-w-xl">Gérez facilement vos livres, catégories, emprunts et utilisateurs depuis un seul endroit.</p>
 </div>
+
+@auth
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <a href="{{ route('books.index') }}" class="action-card">
+            <div class="action-icon"><x-icon name="book" /></div>
+            <div>
+                <h2 class="font-display font-semibold text-lg text-ink-900">Livres</h2>
+                <p class="text-ink-700/60 text-sm mt-0.5">Parcourir le catalogue</p>
+            </div>
+        </a>
+
+        <a href="{{ route('categories.index') }}" class="action-card">
+            <div class="action-icon"><x-icon name="tag" /></div>
+            <div>
+                <h2 class="font-display font-semibold text-lg text-ink-900">Catégories</h2>
+                <p class="text-ink-700/60 text-sm mt-0.5">Classer vos livres</p>
+            </div>
+        </a>
+
+        <a href="{{ route('borrowings.index') }}" class="action-card">
+            <div class="action-icon"><x-icon name="swap" /></div>
+            <div>
+                <h2 class="font-display font-semibold text-lg text-ink-900">Emprunts</h2>
+                <p class="text-ink-700/60 text-sm mt-0.5">{{ auth()->user()->isStaff() ? 'Suivre emprunts & retours' : 'Voir mes emprunts' }}</p>
+            </div>
+        </a>
+
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('users.index') }}" class="action-card">
+                <div class="action-icon"><x-icon name="users" /></div>
+                <div>
+                    <h2 class="font-display font-semibold text-lg text-ink-900">Utilisateurs</h2>
+                    <p class="text-ink-700/60 text-sm mt-0.5">Gérer les utilisateurs</p>
+                </div>
+            </a>
+        @else
+            <a href="{{ route('dashboard') }}" class="action-card">
+                <div class="action-icon"><x-icon name="grid" /></div>
+                <div>
+                    <h2 class="font-display font-semibold text-lg text-ink-900">Tableau de bord</h2>
+                    <p class="text-ink-700/60 text-sm mt-0.5">Voir mon activité</p>
+                </div>
+            </a>
+        @endif
+    </div>
+@endauth
+
+@guest
+    <div class="surface-pad surface max-w-md mt-4">
+        <div class="action-icon mb-4"><x-icon name="library" /></div>
+        <h2 class="font-display text-xl font-semibold text-ink-900 mb-1">Accès invité</h2>
+        <p class="text-ink-700/60 text-sm mb-6">Connectez-vous ou créez un compte pour accéder au catalogue et à vos emprunts.</p>
+        <div class="flex gap-3">
+            <a href="{{ route('login') }}" class="btn btn-primary">
+                <x-icon name="login" /> Se connecter
+            </a>
+            <a href="{{ route('register') }}" class="btn btn-outline">
+                <x-icon name="user-plus" /> S'inscrire
+            </a>
+        </div>
+    </div>
+@endguest
+
 @endsection

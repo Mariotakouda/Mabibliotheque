@@ -2,45 +2,75 @@
 @section('title', 'Catégories')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4 text-white">Liste des catégories</h1>
 
-@if(auth()->user()->isStaff())
-    <a href="{{ route('categories.create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">+ Ajouter</a>
-@endif
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+    <div>
+        <p class="eyebrow mb-2">Catalogue</p>
+        <h1 class="page-title">Catégories</h1>
+    </div>
+    @if(auth()->user()->isStaff())
+        <a href="{{ route('categories.create') }}" class="btn btn-primary">
+            <x-icon name="plus" /> Ajouter
+        </a>
+    @endif
+</div>
 
-<table class="w-full mt-4 bg-white shadow rounded">
-    <thead class="bg-gray-200">
-        <tr>
-            <th class="p-2">Nom</th>
-            <th>Description</th>
-            <th>Livres</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    @forelse($categories as $category)
-        <tr class="border-b">
-            <td class="p-2">{{ $category->name }}</td>
-            <td>{{ $category->description }}</td>
-            <td>{{ $category->books_count }}</td>
-            <td>
-                <a href="{{ route('categories.show', $category) }}" class="text-blue-600">Voir</a>
-                @if(auth()->user()->isStaff())
-                    | <a href="{{ route('categories.edit', $category) }}" class="text-yellow-600">Modifier</a> |
-                    <form method="POST" action="{{ route('categories.destroy', $category) }}" class="inline">
-                        @csrf @method('DELETE')
-                        <button onclick="return confirm('Supprimer cette catégorie ?')" class="text-red-600">Supprimer</button>
-                    </form>
-                @endif
-            </td>
-        </tr>
-    @empty
-        <tr><td colspan="4" class="text-center p-4 text-gray-400">Aucune catégorie trouvée.</td></tr>
-    @endforelse
-    </tbody>
-</table>
+<div class="table-card">
+    <div class="overflow-x-auto">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Livres</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @forelse($categories as $category)
+                <tr>
+                    <td class="font-medium text-ink-900">
+                        <span class="inline-flex items-center gap-2">
+                            <x-icon name="tag" class="w-4 h-4 text-brass-600" /> {{ $category->name }}
+                        </span>
+                    </td>
+                    <td class="text-ink-700/70">{{ $category->description ?: '—' }}</td>
+                    <td><span class="badge badge-neutral">{{ $category->books_count }}</span></td>
+                    <td>
+                        <div class="flex justify-end gap-1">
+                            <a href="{{ route('categories.show', $category) }}" class="icon-action" title="Voir">
+                                <x-icon name="eye" />
+                            </a>
+                            @if(auth()->user()->isStaff())
+                                <a href="{{ route('categories.edit', $category) }}" class="icon-action accent" title="Modifier">
+                                    <x-icon name="pencil" />
+                                </a>
+                                <form method="POST" action="{{ route('categories.destroy', $category) }}">
+                                    @csrf @method('DELETE')
+                                    <button onclick="return confirm('Supprimer cette catégorie ?')" class="icon-action danger" title="Supprimer">
+                                        <x-icon name="trash" />
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4">
+                        <div class="table-empty">
+                            <x-icon name="tag" />
+                            <p>Aucune catégorie trouvée.</p>
+                        </div>
+                    </td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<div class="mt-4">
+<div class="mt-5">
     {{ $categories->links() }}
 </div>
 @endsection

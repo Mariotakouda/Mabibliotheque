@@ -2,66 +2,85 @@
 @section('title', 'Mon profil')
 
 @section('content')
-<div class="max-w-lg mx-auto bg-white p-6 rounded-xl shadow">
-    <h1 class="text-2xl font-bold mb-1">Mon profil</h1>
-    <p class="text-gray-500 text-sm mb-4">Rôle actuel : <span class="font-semibold">{{ ucfirst($user->role) }}</span></p>
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <p class="eyebrow mb-2">Compte</p>
+        <h1 class="page-title">Mon profil</h1>
+        <p class="page-subtitle">Rôle actuel : <span class="font-semibold text-ink-900">{{ ucfirst($user->role) }}</span></p>
+    </div>
 
-    <form method="POST" action="{{ route('profile.update') }}" class="space-y-4">
-        @csrf
-        @method('PUT')
+    <div class="surface surface-pad">
+        <form method="POST" action="{{ route('profile.update') }}" class="space-y-5">
+            @csrf
+            @method('PUT')
 
-        <div class="grid grid-cols-2 gap-3">
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Prénom</label>
-                <input type="text" name="first_name" value="{{ old('first_name', $user->first_name) }}" class="border p-2 w-full rounded-lg">
-                @error('first_name')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+            <div class="grid grid-cols-2 gap-4">
+                <div class="field">
+                    <label class="field-label">Prénom</label>
+                    <input type="text" name="first_name" value="{{ old('first_name', $user->first_name) }}" class="field-input {{ $errors->has('first_name') ? 'has-error' : '' }}">
+                    @error('first_name')<p class="field-error">{{ $message }}</p>@enderror
+                </div>
+                <div class="field">
+                    <label class="field-label">Nom</label>
+                    <input type="text" name="last_name" value="{{ old('last_name', $user->last_name) }}" class="field-input {{ $errors->has('last_name') ? 'has-error' : '' }}">
+                    @error('last_name')<p class="field-error">{{ $message }}</p>@enderror
+                </div>
             </div>
-            <div>
-                <label class="block text-gray-700 font-medium mb-1">Nom</label>
-                <input type="text" name="last_name" value="{{ old('last_name', $user->last_name) }}" class="border p-2 w-full rounded-lg">
-                @error('last_name')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+
+            <div class="field">
+                <label class="field-label">Quartier</label>
+                <input type="text" name="district" value="{{ old('district', $user->district) }}" class="field-input">
             </div>
-        </div>
 
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">Quartier</label>
-            <input type="text" name="district" value="{{ old('district', $user->district) }}" class="border p-2 w-full rounded-lg">
-        </div>
+            <div class="field">
+                <label class="field-label">Téléphone</label>
+                <div class="field-with-icon">
+                    <x-icon name="phone" />
+                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="field-input">
+                </div>
+            </div>
 
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">Téléphone</label>
-            <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="border p-2 w-full rounded-lg">
-        </div>
+            <div class="field">
+                <label class="field-label">Email</label>
+                <div class="field-with-icon">
+                    <x-icon name="mail" />
+                    <input type="email" name="email" value="{{ old('email', $user->email) }}" class="field-input {{ $errors->has('email') ? 'has-error' : '' }}">
+                </div>
+                @error('email')<p class="field-error">{{ $message }}</p>@enderror
+            </div>
 
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">Email</label>
-            <input type="email" name="email" value="{{ old('email', $user->email) }}" class="border p-2 w-full rounded-lg">
-            @error('email')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-        </div>
+            <div class="pt-4 border-t border-ink-900/[0.06]">
+                <p class="flex items-center gap-2 text-xs text-ink-700/50 mb-4">
+                    <x-icon name="info" class="w-4 h-4" />
+                    Laissez les champs ci-dessous vides pour conserver votre mot de passe actuel.
+                </p>
 
-        <hr class="my-4">
-        <p class="text-gray-500 text-sm">Laissez les champs ci-dessous vides pour conserver votre mot de passe actuel.</p>
+                <div class="field mb-4">
+                    <label class="field-label">Mot de passe actuel</label>
+                    <div class="field-with-icon">
+                        <x-icon name="lock" />
+                        <input type="password" name="current_password" placeholder="Requis pour changer le mot de passe" class="field-input {{ $errors->has('current_password') ? 'has-error' : '' }}">
+                    </div>
+                    @error('current_password')<p class="field-error">{{ $message }}</p>@enderror
+                </div>
 
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">Mot de passe actuel</label>
-            <input type="password" name="current_password" placeholder="Requis pour changer le mot de passe" class="border p-2 w-full rounded-lg">
-            @error('current_password')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-        </div>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="field">
+                        <label class="field-label">Nouveau mot de passe</label>
+                        <input type="password" name="password" class="field-input {{ $errors->has('password') ? 'has-error' : '' }}">
+                        @error('password')<p class="field-error">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="field">
+                        <label class="field-label">Confirmer le mot de passe</label>
+                        <input type="password" name="password_confirmation" class="field-input">
+                    </div>
+                </div>
+            </div>
 
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">Nouveau mot de passe</label>
-            <input type="password" name="password" class="border p-2 w-full rounded-lg">
-            @error('password')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
-        </div>
-
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">Confirmer le nouveau mot de passe</label>
-            <input type="password" name="password_confirmation" class="border p-2 w-full rounded-lg">
-        </div>
-
-        <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg w-full transition">
-            Enregistrer
-        </button>
-    </form>
+            <button class="btn btn-primary btn-block">
+                <x-icon name="check-circle" /> Enregistrer
+            </button>
+        </form>
+    </div>
 </div>
 @endsection

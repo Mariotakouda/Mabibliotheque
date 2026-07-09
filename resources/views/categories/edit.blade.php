@@ -2,15 +2,36 @@
 @section('title', 'Modifier catégorie')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4">Modifier catégorie</h1>
+<div class="max-w-lg mx-auto">
+    <div class="mb-6">
+        <p class="eyebrow mb-2">Catalogue</p>
+        <h1 class="page-title">Modifier catégorie</h1>
+    </div>
 
-<form action="{{ route('categories.update', $category) }}" method="POST">
-    @csrf
-    @method('PUT')
+    <div class="surface surface-pad">
+        <form action="{{ route('categories.update', $category) }}" method="POST" class="space-y-5">
+            @csrf
+            @method('PUT')
 
-    <input type="text" name="name" value="{{ old('name', $category->name) }}" class="border p-2 w-full mb-2">
-    <textarea name="description" class="border p-2 w-full mb-2">{{ old('description', $category->description) }}</textarea>
+            <div class="field">
+                <label class="field-label">Nom de la catégorie</label>
+                <input type="text" name="name" value="{{ old('name', $category->name) }}" class="field-input {{ $errors->has('name') ? 'has-error' : '' }}">
+                @error('name')<p class="field-error">{{ $message }}</p>@enderror
+            </div>
 
-    <button class="bg-yellow-600 text-white px-4 py-2 rounded">Mettre à jour</button>
-</form>
+            <div class="field">
+                <label class="field-label">Description</label>
+                <textarea name="description" rows="4" class="field-input {{ $errors->has('description') ? 'has-error' : '' }}">{{ old('description', $category->description) }}</textarea>
+                @error('description')<p class="field-error">{{ $message }}</p>@enderror
+            </div>
+
+            <div class="flex justify-end gap-3 pt-2">
+                <a href="{{ route('categories.show', $category) }}" class="btn btn-outline">Annuler</a>
+                <button type="submit" class="btn btn-accent">
+                    <x-icon name="pencil" /> Mettre à jour
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection

@@ -2,55 +2,87 @@
 @section('title', 'Utilisateurs')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4 text-white">Liste des utilisateurs</h1>
 
-<div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-    <a href="{{ route('users.create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">+ Ajouter</a>
-
-    <form method="GET" action="{{ route('users.index') }}" class="flex gap-2">
-        <input type="text" name="q" value="{{ $search }}" placeholder="Rechercher (nom, email)..."
-               class="border rounded p-2">
-        <button class="bg-gray-700 text-white px-3 py-2 rounded">Rechercher</button>
-    </form>
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+    <div>
+        <p class="eyebrow mb-2">Administration</p>
+        <h1 class="page-title">Utilisateurs</h1>
+    </div>
+    <a href="{{ route('users.create') }}" class="btn btn-primary">
+        <x-icon name="plus" /> Ajouter
+    </a>
 </div>
 
-<table class="w-full mt-4 bg-white shadow rounded">
-    <thead class="bg-gray-200">
-        <tr>
-            <th class="p-2">Nom</th>
-            <th>Email</th>
-            <th>Téléphone</th>
-            <th>Rôle</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    @forelse($users as $user)
-        <tr class="border-b">
-            <td class="p-2">{{ $user->first_name }} {{ $user->last_name }}</td>
-            <td>{{ $user->email }}</td>
-            <td>{{ $user->phone }}</td>
-            <td>{{ ucfirst($user->role) }}</td>
-            <td>
-                <a href="{{ route('users.show', $user) }}" class="text-blue-600">Voir</a> |
-                <a href="{{ route('users.edit', $user) }}" class="text-yellow-600">Modifier</a> |
-                @if($user->id !== auth()->id())
-                    <form method="POST" action="{{ route('users.destroy', $user) }}" class="inline">
-                        @csrf @method('DELETE')
-                        <button onclick="return confirm('Supprimer cet utilisateur ?')" class="text-red-600">Supprimer</button>
-                    </form>
-                @else
-                    <span class="text-gray-400">(vous)</span>
-                @endif
-            </td>
-        </tr>
-    @empty
-        <tr><td colspan="5" class="text-center p-4 text-gray-400">Aucun utilisateur trouvé.</td></tr>
-    @endforelse
-    </tbody>
-</table>
+<form method="GET" action="{{ route('users.index') }}" class="flex gap-3 mb-6">
+    <div class="field-with-icon flex-1 max-w-sm">
+        <x-icon name="search" />
+        <input type="text" name="q" value="{{ $search }}" placeholder="Rechercher (nom, email)..." class="field-input">
+    </div>
+    <button class="btn btn-outline">
+        <x-icon name="search" /> Rechercher
+    </button>
+</form>
 
-<div class="mt-4">
+<div class="table-card">
+    <div class="overflow-x-auto">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Rôle</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @forelse($users as $user)
+                <tr>
+                    <td class="font-medium text-ink-900">{{ $user->first_name }} {{ $user->last_name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->phone ?: '—' }}</td>
+                    <td>
+                        <span class="badge {{ $user->role === 'admin' ? 'badge-warning' : ($user->role === 'librarian' ? 'badge-info' : 'badge-neutral') }}">
+                            {{ ucfirst($user->role) }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="flex justify-end gap-1 items-center">
+                            <a href="{{ route('users.show', $user) }}" class="icon-action" title="Voir">
+                                <x-icon name="eye" />
+                            </a>
+                            <a href="{{ route('users.edit', $user) }}" class="icon-action accent" title="Modifier">
+                                <x-icon name="pencil" />
+                            </a>
+                            @if($user->id !== auth()->id())
+                                <form method="POST" action="{{ route('users.destroy', $user) }}">
+                                    @csrf @method('DELETE')
+                                    <button onclick="return confirm('Supprimer cet utilisateur ?')" class="icon-action danger" title="Supprimer">
+                                        <x-icon name="trash" />
+                                    </button>
+                                </form>
+                            @else
+                                <span class="text-ink-700/30 text-xs px-1">(vous)</span>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5">
+                        <div class="table-empty">
+                            <x-icon name="users" />
+                            <p>Aucun utilisateur trouvé.</p>
+                        </div>
+                    </td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-5">
     {{ $users->links() }}
 </div>
 @endsection

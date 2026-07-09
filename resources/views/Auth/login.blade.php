@@ -2,53 +2,57 @@
 @section('title', 'Connexion')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center">
+<div class="min-h-[75vh] flex items-center justify-center">
+    <div class="w-full max-w-sm">
 
-    <div class="absolute inset-0 bg-black opacity-20"></div>
-
-    <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-xl p-8 space-y-6 z-10">
-
-        <div class="text-center">
-            <h1 class="text-3xl font-extrabold text-gray-800 mb-2">Connexion</h1>
-            <p class="text-gray-600 text-sm">Connectez-vous pour accéder à votre compte</p>
+        <div class="text-center mb-8">
+            <div class="w-12 h-12 rounded-xl bg-ink-900 text-brass-300 flex items-center justify-center mx-auto mb-4">
+                <x-icon name="library" class="w-6 h-6" />
+            </div>
+            <h1 class="page-title">Connexion</h1>
+            <p class="page-subtitle">Connectez-vous pour accéder à votre compte</p>
         </div>
 
-        <form method="POST" action="{{ route('login.attempt') }}" class="space-y-5">
-            @csrf
-            <div>
-                <label for="email" class="block text-gray-700 font-medium mb-1">Email</label>
-                <input id="email" type="email" name="email" placeholder="Email" value="{{ old('email') }}"
-                       class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm transition duration-200"
-                       required autofocus>
-                @error('email')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+        <div class="auth-surface">
+            <form method="POST" action="{{ route('login.attempt') }}" class="space-y-5">
+                @csrf
 
-            <div>
-                <label for="password" class="block text-gray-700 font-medium mb-1">Mot de passe</label>
-                <input id="password" type="password" name="password" placeholder="Mot de passe"
-                       class="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm transition duration-200"
-                       required>
-                @error('password')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+                <div class="field">
+                    <label for="email" class="field-label">Email</label>
+                    <div class="field-with-icon">
+                        <x-icon name="mail" />
+                        <input id="email" type="email" name="email" placeholder="vous@exemple.com" value="{{ old('email') }}"
+                               class="field-input {{ $errors->has('email') ? 'has-error' : '' }}"
+                               required autofocus>
+                    </div>
+                    @error('email')<p class="field-error">{{ $message }}</p>@enderror
+                </div>
 
-            <div class="flex items-center">
-                <input id="remember" type="checkbox" name="remember" class="mr-2">
-                <label for="remember" class="text-gray-600 text-sm">Se souvenir de moi</label>
-            </div>
+                <div class="field">
+                    <label for="password" class="field-label">Mot de passe</label>
+                    <div class="field-with-icon">
+                        <x-icon name="lock" />
+                        <input id="password" type="password" name="password" placeholder="••••••••"
+                               class="field-input {{ $errors->has('password') ? 'has-error' : '' }}"
+                               required>
+                    </div>
+                    @error('password')<p class="field-error">{{ $message }}</p>@enderror
+                </div>
 
-            <button type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-200 transform hover:scale-105">
-                Se connecter
-            </button>
-        </form>
+                <div class="flex items-center">
+                    <input id="remember" type="checkbox" name="remember" class="mr-2 rounded border-ink-900/20 text-ink-900 focus:ring-brass-500">
+                    <label for="remember" class="text-ink-700/70 text-sm">Se souvenir de moi</label>
+                </div>
 
-        <p class="text-center text-gray-600 text-sm mt-4">
+                <button type="submit" class="btn btn-primary btn-block">
+                    <x-icon name="login" /> Se connecter
+                </button>
+            </form>
+        </div>
+
+        <p class="text-center text-ink-700/60 text-sm mt-6">
             Pas encore de compte ?
-            <a href="{{ route('register') }}" class="text-blue-700 font-medium underline">S'inscrire</a>
+            <a href="{{ route('register') }}" class="text-ink-900 font-semibold hover:text-brass-600">S'inscrire</a>
         </p>
     </div>
 </div>

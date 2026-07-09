@@ -2,72 +2,104 @@
 @section('title', 'Livres')
 
 @section('content')
-<h1 class="text-2xl font-bold mb-4 text-white">Liste des livres</h1>
 
-<div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+    <div>
+        <p class="eyebrow mb-2">Catalogue</p>
+        <h1 class="page-title">Livres</h1>
+    </div>
     @if(auth()->user()->isStaff())
-        <a href="{{ route('books.create') }}" class="bg-blue-600 text-white px-3 py-2 rounded">+ Ajouter</a>
-    @else
-        <span></span>
+        <a href="{{ route('books.create') }}" class="btn btn-primary">
+            <x-icon name="plus" /> Ajouter un livre
+        </a>
     @endif
-
-    <form method="GET" action="{{ route('books.index') }}" class="flex flex-wrap gap-2">
-        <input type="text" name="q" value="{{ $search }}" placeholder="Titre, auteur, ISBN..."
-               class="border rounded p-2">
-        <select name="category_id" class="border rounded p-2">
-            <option value="">Toutes les catégories</option>
-            @foreach($categories as $category)
-                <option value="{{ $category->id }}" {{ (string) $categoryId === (string) $category->id ? 'selected' : '' }}>
-                    {{ $category->name }}
-                </option>
-            @endforeach
-        </select>
-        <button class="bg-gray-700 text-white px-3 py-2 rounded">Filtrer</button>
-        @if($search || $categoryId)
-            <a href="{{ route('books.index') }}" class="text-gray-600 self-center underline text-sm">Réinitialiser</a>
-        @endif
-    </form>
 </div>
 
-<table class="w-full mt-4 bg-white shadow rounded">
-    <thead class="bg-gray-200">
-        <tr>
-            <th class="p-2">Titre</th>
-            <th>Auteur</th>
-            <th>Catégorie</th>
-            <th>Disponibles</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    @forelse($books as $book)
-        <tr class="border-b">
-            <td class="p-2">{{ $book->title }}</td>
-            <td>{{ $book->author }}</td>
-            <td>{{ $book->category->name ?? 'Non catégorisé' }}</td>
-            <td>
-                <span class="{{ $book->available_copies > 0 ? 'text-green-600' : 'text-red-600' }} font-semibold">
-                    {{ $book->available_copies }}
-                </span> / {{ $book->total_copies }}
-            </td>
-            <td>
-                <a href="{{ route('books.show', $book) }}" class="text-blue-600">Voir</a>
-                @if(auth()->user()->isStaff())
-                    | <a href="{{ route('books.edit', $book) }}" class="text-yellow-600">Modifier</a> |
-                    <form method="POST" action="{{ route('books.destroy', $book) }}" class="inline">
-                        @csrf @method('DELETE')
-                        <button onclick="return confirm('Supprimer ce livre ?')" class="text-red-600">Supprimer</button>
-                    </form>
-                @endif
-            </td>
-        </tr>
-    @empty
-        <tr><td colspan="5" class="text-center p-4 text-gray-400">Aucun livre trouvé.</td></tr>
-    @endforelse
-    </tbody>
-</table>
+<form method="GET" action="{{ route('books.index') }}" class="flex flex-wrap gap-3 mb-6">
+    <div class="field-with-icon flex-1 min-w-[220px]">
+        <x-icon name="search" />
+        <input type="text" name="q" value="{{ $search }}" placeholder="Titre, auteur, ISBN..."
+               class="field-input">
+    </div>
+    <select name="category_id" class="field-input w-auto">
+        <option value="">Toutes les catégories</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}" {{ (string) $categoryId === (string) $category->id ? 'selected' : '' }}>
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select>
+    <button class="btn btn-outline">
+        <x-icon name="filter" /> Filtrer
+    </button>
+    @if($search || $categoryId)
+        <a href="{{ route('books.index') }}" class="btn btn-ghost">
+            <x-icon name="undo" /> Réinitialiser
+        </a>
+    @endif
+</form>
 
-<div class="mt-4">
+<div class="table-card">
+    <div class="overflow-x-auto">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Catégorie</th>
+                    <th>Disponibles</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @forelse($books as $book)
+                <tr>
+                    <td class="font-medium text-ink-900">{{ $book->title }}</td>
+                    <td>{{ $book->author }}</td>
+                    <td>
+                        <span class="badge badge-neutral"><x-icon name="tag" /> {{ $book->category->name ?? 'Non catégorisé' }}</span>
+                    </td>
+                    <td>
+                        <span class="{{ $book->available_copies > 0 ? 'text-emerald-600' : 'text-red-600' }} font-semibold">
+                            {{ $book->available_copies }}
+                        </span>
+                        <span class="text-ink-700/40">/ {{ $book->total_copies }}</span>
+                    </td>
+                    <td>
+                        <div class="flex justify-end gap-1">
+                            <a href="{{ route('books.show', $book) }}" class="icon-action" title="Voir">
+                                <x-icon name="eye" />
+                            </a>
+                            @if(auth()->user()->isStaff())
+                                <a href="{{ route('books.edit', $book) }}" class="icon-action accent" title="Modifier">
+                                    <x-icon name="pencil" />
+                                </a>
+                                <form method="POST" action="{{ route('books.destroy', $book) }}">
+                                    @csrf @method('DELETE')
+                                    <button onclick="return confirm('Supprimer ce livre ?')" class="icon-action danger" title="Supprimer">
+                                        <x-icon name="trash" />
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5">
+                        <div class="table-empty">
+                            <x-icon name="book" />
+                            <p>Aucun livre trouvé.</p>
+                        </div>
+                    </td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-5">
     {{ $books->links() }}
 </div>
 @endsection

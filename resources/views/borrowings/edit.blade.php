@@ -2,25 +2,41 @@
 @section('title', 'Modifier emprunt')
 
 @section('content')
-<div class="max-w-lg mx-auto bg-white p-6 rounded-xl shadow">
-    <h1 class="text-2xl font-bold mb-4">Modifier l'emprunt</h1>
+<div class="max-w-lg mx-auto">
+    <div class="mb-6">
+        <p class="eyebrow mb-2">Circulation</p>
+        <h1 class="page-title">Modifier l'emprunt</h1>
+    </div>
 
-    <p class="mb-2"><strong>Utilisateur :</strong> {{ $borrowing->user->fullName() }}</p>
-    <p class="mb-4"><strong>Livre :</strong> {{ $borrowing->book->title ?? 'Livre supprimé' }}</p>
+    <div class="surface surface-pad">
+        <div class="flex flex-col gap-1 mb-5 pb-5 border-b border-ink-900/[0.06] text-sm">
+            <span class="flex items-center gap-2 text-ink-700/70"><x-icon name="users" class="w-4 h-4" /> {{ $borrowing->user->fullName() }}</span>
+            <span class="flex items-center gap-2 text-ink-700/70"><x-icon name="book" class="w-4 h-4" /> {{ $borrowing->book->title ?? 'Livre supprimé' }}</span>
+        </div>
 
-    <form action="{{ route('borrowings.update', $borrowing) }}" method="POST">
-        @csrf
-        @method('PUT')
+        <form action="{{ route('borrowings.update', $borrowing) }}" method="POST" class="space-y-5">
+            @csrf
+            @method('PUT')
 
-        <label class="block font-semibold mb-1">Date d'emprunt :</label>
-        <input type="date" name="borrowed_at" value="{{ old('borrowed_at', $borrowing->borrowed_at->format('Y-m-d')) }}" class="border p-2 w-full mb-3 rounded-lg">
-        @error('borrowed_at')<p class="text-red-500 text-sm mb-2">{{ $message }}</p>@enderror
+            <div class="field">
+                <label class="field-label">Date d'emprunt</label>
+                <input type="date" name="borrowed_at" value="{{ old('borrowed_at', $borrowing->borrowed_at->format('Y-m-d')) }}" class="field-input {{ $errors->has('borrowed_at') ? 'has-error' : '' }}">
+                @error('borrowed_at')<p class="field-error">{{ $message }}</p>@enderror
+            </div>
 
-        <label class="block font-semibold mb-1">Date de retour prévue :</label>
-        <input type="date" name="due_at" value="{{ old('due_at', $borrowing->due_at->format('Y-m-d')) }}" class="border p-2 w-full mb-3 rounded-lg">
-        @error('due_at')<p class="text-red-500 text-sm mb-2">{{ $message }}</p>@enderror
+            <div class="field">
+                <label class="field-label">Date de retour prévue</label>
+                <input type="date" name="due_at" value="{{ old('due_at', $borrowing->due_at->format('Y-m-d')) }}" class="field-input {{ $errors->has('due_at') ? 'has-error' : '' }}">
+                @error('due_at')<p class="field-error">{{ $message }}</p>@enderror
+            </div>
 
-        <button class="bg-yellow-600 text-white px-4 py-2 rounded w-full">Mettre à jour</button>
-    </form>
+            <div class="flex justify-end gap-3 pt-2">
+                <a href="{{ route('borrowings.show', $borrowing) }}" class="btn btn-outline">Annuler</a>
+                <button type="submit" class="btn btn-accent btn-block sm:w-auto">
+                    <x-icon name="pencil" /> Mettre à jour
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection
